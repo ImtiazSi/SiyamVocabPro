@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>Siyam VocabPro</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','Poppins',system-ui,sans-serif;background:linear-gradient(145deg,#1a1e2b,#2a3142);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:15px}
+.app{max-width:500px;width:100%;background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);border-radius:36px;padding:20px 18px 25px;border:1px solid rgba(255,255,255,0.15);display:flex;flex-direction:column;gap:16px}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.logo{font-weight:700;font-size:1.4rem;background:linear-gradient(135deg,#f9d56e,#f8b042);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.tabs{display:flex;gap:6px}
+.tab{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:white;padding:8px 14px;border-radius:20px;font-weight:600;font-size:0.8rem;cursor:pointer}
+.tab.on{background:#f9d56e;color:#1a1e2b}
+.card{background:rgba(22,26,35,0.85);border-radius:32px;padding:24px 20px;border:1px solid rgba(255,255,255,0.15);box-shadow:0 20px 30px -10px black}
+.word-row{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.word{font-size:2.5rem;font-weight:700;color:white}
+.pos{background:rgba(255,255,255,0.12);padding:6px 16px;border-radius:25px;font-weight:600;font-size:0.85rem;text-transform:uppercase;color:#f0e6c5}
+.bn{font-size:1.2rem;font-weight:600;color:#ffd966;margin:8px 0;background:rgba(0,0,0,0.3);padding:8px 16px;border-radius:20px;display:inline-block}
+.sa{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap}
+.syn,.ant{flex:1;min-width:110px;background:rgba(255,255,255,0.05);padding:10px;border-radius:16px;border:1px solid rgba(255,255,255,0.1)}
+.syn span:first-child{color:#6ab04c;font-weight:700;font-size:0.7rem;text-transform:uppercase}
+.ant span:first-child{color:#eb4d4b;font-weight:700;font-size:0.7rem;text-transform:uppercase}
+.examples{margin:10px 0}
+.ex{border-left:4px solid;padding:8px 12px;margin:8px 0;border-radius:0 12px 12px 0;background:rgba(255,255,255,0.04)}
+.ex .lvl{font-size:0.65rem;font-weight:700;text-transform:uppercase}
+.ex .eng{color:#f0f0f0;font-size:0.95rem}
+.ex .ben{color:#b9c6da;font-size:0.85rem;font-style:italic}
+.btns{display:flex;justify-content:space-between;gap:8px;margin-top:12px;flex-wrap:wrap}
+.btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:white;padding:10px 16px;border-radius:25px;font-weight:600;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;gap:6px}
+.btn2{background:#f9d56e;color:#1a1e2b;border:none}
+.btn3{background:#4b5c7a}
+.btn4{background:#c44569}
+.nav{display:flex;gap:8px}
+.nav button{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.2);color:white;padding:12px;border-radius:25px;font-weight:600;cursor:pointer;font-size:0.85rem}
+.banner{background:rgba(249,213,110,0.12);border-radius:18px;padding:10px 14px;color:#ffe5a3;display:none;justify-content:space-between;align-items:center;font-size:0.8rem;border:1px solid rgba(249,213,110,0.3)}
+.info{text-align:center;color:rgba(255,255,255,0.5);font-size:0.7rem;padding:5px 0}
+.info a{color:#f9d56e}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:1000;justify-content:center;align-items:center}
+.modal>div{background:#202433;border-radius:28px;padding:22px;max-width:400px;width:92%;color:white;border:1px solid rgba(255,255,255,0.15)}
+.modal h3{color:#f9d56e;margin-bottom:12px}
+.opt{display:block;width:100%;padding:12px;margin:6px 0;border-radius:18px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.08);color:white;font-weight:600;cursor:pointer;text-align:left}
+.opt.green{background:#27ae60!important}
+.opt.red{background:#e74c3c!important}
+select{width:100%;padding:10px;margin:8px 0;border-radius:12px;background:#2a3142;color:white;border:1px solid rgba(255,255,255,0.2);font-size:0.9rem}
+.bigbtn{width:100%;padding:12px;border-radius:20px;border:none;font-weight:700;cursor:pointer;margin-top:8px;font-size:1rem}
+.green{background:#27ae60;color:white}
+.gray{background:#4b5c7a;color:white}
+.red{background:#e74c3c;color:white}
+.timer{font-size:2rem;font-weight:700;text-align:center;color:#f9d56e;margin:10px 0}
+.stat{display:flex;justify-content:space-between;color:#ccc;margin:4px 0;font-size:0.9rem}
+input{width:100%;padding:12px;border-radius:15px;border:1px solid rgba(255,255,255,0.3);background:#2a3142;color:white;font-size:1rem;text-align:center;margin:8px 0}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><span class="logo">Siyam VocabPro</span><div class="tabs"><button class="tab on" id="tabLearn">📖 Learn</button><button class="tab" id="tabQuiz">🧠 Quiz</button><button class="tab" id="tabExam">📝 Exam</button></div></div>
+<div id="card" class="card"></div>
+<div id="banner" class="banner"><span>🔁 আজকের শব্দ</span><button id="closeBanner" style="color:#ffe5a3;background:none;border:none;font-size:1.2rem;cursor:pointer">✕</button></div>
+<div id="learnNav" class="nav"><button id="prevBtn">← আগের</button><button id="gameBtn">🎮 Game</button><button id="nextBtn">পরবর্তী →</button></div>
+<div class="info">Created by <strong>Imtiaz Ahmed Siyam</strong> • <a href="mailto:ahmedimtiazblackguard@gmail.com">📧 Contact</a></div>
+</div>
+<div id="quizModal" class="modal"><div><h3>🧠 কুইজ</h3><div class="stat"><span>Score:</span><span id="qScore">0</span></div><div class="stat"><span>Q:</span><span id="qNum">1/10</span></div><p id="qQ"></p><div id="qOpts"></div><p id="qFb" style="text-align:center;margin-top:8px"></p><button id="closeQuiz" class="bigbtn gray">বন্ধ</button></div></div>
+<div id="examModal" class="modal"><div><h3>📝 পরীক্ষা</h3><div id="examSetup"><label>⏱️ সময়:</label><select id="examTime"><option value="3">3 min</option><option value="5" selected>5 min</option><option value="10">10 min</option><option value="15">15 min</option><option value="20">20 min</option></select><label>📊 প্রশ্ন:</label><select id="examCount"><option value="10">10</option><option value="20" selected>20</option><option value="30">30</option><option value="40">40</option><option value="50">50</option><option value="75">75</option><option value="100">100</option></select><button id="startExam" class="bigbtn green">🚀 শুরু</button></div><div id="examRun" style="display:none"><div class="timer" id="examTimer">05:00</div><div class="stat"><span>Score:</span><span id="eScore">0</span></div><div class="stat"><span>Q:</span><span id="eNum">1/20</span></div><p id="eQ"></p><div id="eOpts"></div><p id="eFb" style="text-align:center;margin-top:8px"></p><button id="finishExam" class="bigbtn red">শেষ</button></div><div id="examResult" style="display:none;text-align:center"><h3>📊 ফলাফল</h3><p style="font-size:1.5rem">Score: <span id="finalScore" style="color:#f9d56e">0</span></p><p>Correct: <span id="finalCorrect">0</span></p><p>Wrong: <span id="finalWrong">0</span></p><button id="closeExam" class="bigbtn gray">বন্ধ</button></div></div></div>
+<div id="gameModal" class="modal"><div style="text-align:center"><h3>🎮 ওয়ার্ড গেম</h3><p id="gameWord" style="font-size:1.8rem;color:#f9d56e;margin:15px 0"></p><input id="gameInput" placeholder="ইংরেজি শব্দ লিখুন..."><div class="stat"><span>Score:</span><span id="gScore">0</span></div><p id="gFb"></p><div style="display:flex;gap:8px"><button id="gameSubmit" class="bigbtn green" style="flex:1">✅ Submit</button><button id="gameSkip" class="bigbtn" style="flex:1;background:#e67e22;color:white">⏭️ Skip</button></div><button id="closeGame" class="bigbtn gray" style="margin-top:8px">বন্ধ</button></div></div>
+<script>
+(function(){
+var words=[],idx=0,favs=[],seen=[],mode='learn';
+var quiz={active:false,score:0,qNum:0,total:10,cw:null,answered:false};
+var exam={active:false,score:0,qNum:0,total:20,cw:null,answered:false,timeLeft:300,timer:null,correct:0,wrong:0};
+var game={active:false,score:0,cw:null};
+var raw=[
+{w:"Ephemeral",b:"ক্ষণস্থায়ী",p:"adjective",s:"Transient, Fleeting",a:"Permanent, Eternal",ex:[{l:"easy",e:"The sunset was ephemeral but beautiful.",bn:"সূর্যাস্তটি ক্ষণস্থায়ী কিন্তু সুন্দর ছিল।"},{l:"medium",e:"Fame can be ephemeral in the digital age.",bn:"ডিজিটাল যুগে খ্যাতি ক্ষণস্থায়ী হতে পারে।"},{l:"advanced",e:"He contemplated the ephemeral nature of human existence.",bn:"তিনি মানব অস্তিত্বের ক্ষণস্থায়ী প্রকৃতি নিয়ে চিন্তা করলেন।"}]},
+{w:"Ubiquitous",b:"সর্বব্যাপী",p:"adjective",s:"Omnipresent",a:"Rare",ex:[{l:"easy",e:"Smartphones are ubiquitous.",bn:"স্মার্টফোন সর্বব্যাপী।"},{l:"medium",e:"Social media is ubiquitous.",bn:"সামাজিক মাধ্যম সর্বব্যাপী।"},{l:"advanced",e:"Her influence became ubiquitous.",bn:"তার প্রভাব সর্বব্যাপী হয়ে উঠল।"}]},
+{w:"Eloquent",b:"বাকপটু",p:"adjective",s:"Articulate",a:"Inarticulate",ex:[{l:"easy",e:"She gave an eloquent speech.",bn:"তিনি বাকপটু বক্তৃতা দিলেন।"},{l:"medium",e:"His gestures were eloquent.",bn:"তার অঙ্গভঙ্গি বাকপটু ছিল।"},{l:"advanced",e:"The lawyer's eloquent argument swayed the jury.",bn:"উকিলের বাকপটু যুক্তি জুরিকে প্রভাবিত করল।"}]},
+{w:"Resilient",b:"স্থিতিস্থাপক",p:"adjective",s:"Tough",a:"Fragile",ex:[{l:"easy",e:"Children are resilient.",bn:"শিশুরা স্থিতিস্থাপক।"},{l:"medium",e:"The economy is resilient.",bn:"অর্থনীতি স্থিতিস্থাপক।"},{l:"advanced",e:"She remained resilient despite failures.",bn:"তিনি ব্যর্থতা সত্ত্বেও স্থিতিস্থাপক ছিলেন।"}]},
+{w:"Meticulous",b:"খুঁটিনাটি",p:"adjective",s:"Thorough",a:"Careless",ex:[{l:"easy",e:"He is meticulous.",bn:"সে খুঁটিনাটি।"},{l:"medium",e:"Meticulous planning helped.",bn:"খুঁটিনাটি পরিকল্পনা সাহায্য করেছে।"},{l:"advanced",e:"The meticulous restoration took years.",bn:"খুঁটিনাটি পুনরুদ্ধারে বছর লেগেছে।"}]},
+{w:"Candid",b:"অকপট",p:"adjective",s:"Frank",a:"Deceptive",ex:[{l:"easy",e:"She gave a candid answer.",bn:"সে অকপট উত্তর দিল।"},{l:"medium",e:"His candid feedback helped.",bn:"তার অকপট মতামত সাহায্য করেছে।"},{l:"advanced",e:"A candid conversation resolved it.",bn:"অকপট কথোপকথন সমাধান করেছে।"}]}
+];
+for(var i=0;i<5000;i++){var r=raw[i%raw.length];words.push({id:i,word:r.w,bengali:r.b,pos:r.p,synonym:r.s,antonym:r.a,examples:r.ex});}
+function sh(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}}
+sh(words);
+var themes=['linear-gradient(135deg,#3a2c4a,#5b3e6b)','linear-gradient(135deg,#1e3c3a,#2b7a78)','linear-gradient(135deg,#2c3e50,#3498db)','linear-gradient(135deg,#4a2c3d,#c44569)','linear-gradient(135deg,#2d3a4a,#5f7a9c)'];
+function speak(txt){if(window.speechSynthesis){var u=new SpeechSynthesisUtterance(txt);u.lang='en-US';u.rate=0.9;speechSynthesis.cancel();speechSynthesis.speak(u);}}
+function renderLearn(){
+if(mode!=='learn')return;
+var w=words[idx];if(!w)return;
+document.getElementById('card').style.background=themes[idx%themes.length];
+document.getElementById('card').innerHTML='<div class="word-row"><span class="word">'+w.word+'</span><span class="pos">'+w.pos+'</span></div><div class="bn">🇧🇩 '+w.bengali+'</div><div class="sa"><div class="syn"><span>Synonym</span><br>'+w.synonym+'</div><div class="ant"><span>Antonym</span><br>'+w.antonym+'</div></div><div class="examples">'+w.examples.map(function(ex){var lc={easy:'#6ab04c',medium:'#f9ca24',advanced:'#eb4d4b'};return '<div class="ex" style="border-left-color:'+(lc[ex.l]||'#ccc')+'"><span class="lvl" style="color:'+(lc[ex.l]||'#ccc')+'">'+ex.l+'</span><span class="eng">'+ex.e+'</span><span class="ben">'+ex.bn+'</span></div>';}).join('')+'</div><div class="btns"><button class="btn" id="favBtn">'+(favs.indexOf(w.id)>=0?'❤️':'🤍')+' প্রিয়</button><button class="btn btn2" id="pronBtn">🔊 উচ্চারণ</button></div>';
+document.getElementById('favBtn').onclick=function(){var p=favs.indexOf(w.id);if(p>=0)favs.splice(p,1);else favs.push(w.id);renderLearn();};
+document.getElementById('pronBtn').onclick=function(){speak(w.word);};
+if(seen.indexOf(idx)<0)seen.push(idx);
+}
+function renderBanner(){var r=words[Math.floor(Math.random()*words.length)];document.getElementById('banner').style.display='flex';document.getElementById('banner').innerHTML='<span>🔁 আজকের শব্দ: <strong>'+r.word+'</strong> ('+r.bengali+')</span><button id="dni" style="color:#ffe5a3;background:none;border:none;font-size:1.2rem;cursor:pointer">✕</button>';document.getElementById('dni').onclick=function(){document.getElementById('banner').style.display='none';};}
+function goPrev(){idx=(idx-1+words.length)%words.length;renderLearn();}
+function goNext(){idx=(idx+1)%words.length;renderLearn();}
+function startQuiz(){quiz={active:true,score:0,qNum:0,total:10,cw:null,answered:false};document.getElementById('qScore').textContent='0';document.getElementById('qNum').textContent='1/10';document.getElementById('quizModal').style.display='flex';nextQuiz();}
+function nextQuiz(){if(quiz.qNum>=quiz.total){document.getElementById('quizModal').style.display='none';alert('কুইজ শেষ! Score: '+quiz.score+'/'+quiz.total);return;}quiz.qNum++;quiz.answered=false;document.getElementById('qNum').textContent=quiz.qNum+'/'+quiz.total;var cw=words[Math.floor(Math.random()*words.length)];quiz.cw=cw;document.getElementById('qQ').textContent='"'+cw.bengali+'" এর ইংরেজি?';document.getElementById('qFb').textContent='';var oth=words.filter(function(w){return w.id!==cw.id;}).sort(function(){return Math.random()-0.5;}).slice(0,3);var ops=[cw].concat(oth).sort(function(){return Math.random()-0.5;});var html='';ops.forEach(function(o){html+='<button class="opt" data-id="'+o.id+'">'+o.word+'</button>';});document.getElementById('qOpts').innerHTML=html;
+var btns=document.querySelectorAll('#qOpts .opt');btns.forEach(function(b){b.onclick=function(){if(quiz.answered)return;quiz.answered=true;var oid=parseInt(b.getAttribute('data-id'));if(oid===cw.id){quiz.score++;document.getElementById('qScore').textContent=quiz.score;b.classList.add('green');document.getElementById('qFb').textContent='✅ সঠিক!';}else{b.classList.add('red');document.getElementById('qFb').textContent='❌ সঠিক: '+cw.word;btns.forEach(function(x){if(parseInt(x.getAttribute('data-id'))===cw.id)x.classList.add('green');});}setTimeout(nextQuiz,1200);};});}
+function startExam(){var min=parseInt(document.getElementById('examTime').value);var tot=parseInt(document.getElementById('examCount').value);exam={active:true,score:0,qNum:0,total:tot,cw:null,answered:false,timeLeft:min*60,timer:null,correct:0,wrong:0};document.getElementById('eScore').textContent='0';document.getElementById('eNum').textContent='1/'+tot;document.getElementById('eFb').textContent='';updateExamTimer();document.getElementById('examSetup').style.display='none';document.getElementById('examRun').style.display='block';document.getElementById('examResult').style.display='none';document.getElementById('examModal').style.display='flex';exam.timer=setInterval(function(){exam.timeLeft--;updateExamTimer();if(exam.timeLeft<=0)finishExam();},1000);nextExam();}
+function updateExamTimer(){var m=Math.floor(exam.timeLeft/60);var s=exam.timeLeft%60;document.getElementById('examTimer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+function nextExam(){if(exam.qNum>=exam.total||!exam.active){finishExam();return;}exam.qNum++;exam.answered=false;document.getElementById('eNum').textContent=exam.qNum+'/'+exam.total;var cw=words[Math.floor(Math.random()*words.length)];exam.cw=cw;document.getElementById('eQ').textContent='"'+cw.bengali+'" এর ইংরেজি?';document.getElementById('eFb').textContent='';var oth=words.filter(function(w){return w.id!==cw.id;}).sort(function(){return Math.random()-0.5;}).slice(0,3);var ops=[cw].concat(oth).sort(function(){return Math.random()-0.5;});var html='';ops.forEach(function(o){html+='<button class="opt" data-id="'+o.id+'">'+o.word+'</button>';});document.getElementById('eOpts').innerHTML=html;
+var btns=document.querySelectorAll('#eOpts .opt');btns.forEach(function(b){b.onclick=function(){if(exam.answered)return;exam.answered=true;var oid=parseInt(b.getAttribute('data-id'));if(oid===cw.id){exam.score++;exam.correct++;document.getElementById('eScore').textContent=exam.score;b.classList.add('green');document.getElementById('eFb').textContent='✅ সঠিক!';}else{exam.wrong++;b.classList.add('red');document.getElementById('eFb').textContent='❌ সঠিক: '+cw.word;btns.forEach(function(x){if(parseInt(x.getAttribute('data-id'))===cw.id)x.classList.add('green');});}setTimeout(nextExam,800);};});}
+function finishExam(){if(exam.timer)clearInterval(exam.timer);exam.active=false;document.getElementById('examRun').style.display='none';document.getElementById('examResult').style.display='block';document.getElementById('finalScore').textContent=exam.score;document.getElementById('finalCorrect').textContent=exam.correct;document.getElementById('finalWrong').textContent=exam.wrong;}
+function startGame(){game={active:true,score:0,cw:null};document.getElementById('gScore').textContent='0';document.getElementById('gFb').textContent='';document.getElementById('gameInput').value='';document.getElementById('gameModal').style.display='flex';nextGame();}
+function nextGame(){game.cw=words[Math.floor(Math.random()*words.length)];document.getElementById('gameWord').textContent=game.cw.bengali;document.getElementById('gameInput').value='';document.getElementById('gFb').textContent='';document.getElementById('gameInput').focus();}
+function submitGame(){if(!game.active)return;var inp=document.getElementById('gameInput').value.trim().toLowerCase();var cor=game.cw.word.toLowerCase();if(inp===cor){game.score++;document.getElementById('gScore').textContent=game.score;document.getElementById('gFb').textContent='✅ সঠিক!';document.getElementById('gFb').style.color='#6ab04c';setTimeout(nextGame,1000);}else{document.getElementById('gFb').textContent='❌ সঠিক: '+game.cw.word;document.getElementById('gFb').style.color='#eb4d4b';setTimeout(nextGame,1500);}}
+function setMode(m){
+mode=m;
+document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
+document.getElementById('tab'+(m==='learn'?'Learn':m==='quiz'?'Quiz':'Exam')).classList.add('on');
+document.getElementById('card').style.display=m==='learn'?'block':'none';
+document.getElementById('learnNav').style.display=m==='learn'?'flex':'none';
+if(m==='learn')renderLearn();
+if(m==='quiz')startQuiz();
+if(m==='exam'){document.getElementById('examSetup').style.display='block';document.getElementById('examRun').style.display='none';document.getElementById('examResult').style.display='none';document.getElementById('examModal').style.display='flex';}
+}
+document.getElementById('tabLearn').onclick=function(){setMode('learn');};
+document.getElementById('tabQuiz').onclick=function(){setMode('quiz');};
+document.getElementById('tabExam').onclick=function(){setMode('exam');};
+document.getElementById('prevBtn').onclick=goPrev;
+document.getElementById('nextBtn').onclick=goNext;
+document.getElementById('gameBtn').onclick=startGame;
+document.getElementById('closeBanner').onclick=function(){document.getElementById('banner').style.display='none';};
+document.getElementById('closeQuiz').onclick=function(){document.getElementById('quizModal').style.display='none';quiz.active=false;};
+document.getElementById('closeExam').onclick=function(){document.getElementById('examModal').style.display='none';if(exam.timer)clearInterval(exam.timer);exam.active=false;};
+document.getElementById('finishExam').onclick=finishExam;
+document.getElementById('closeGame').onclick=function(){document.getElementById('gameModal').style.display='none';game.active=false;};
+document.getElementById('startExam').onclick=startExam;
+document.getElementById('gameSubmit').onclick=submitGame;
+document.getElementById('gameSkip').onclick=nextGame;
+document.getElementById('gameInput').onkeypress=function(e){if(e.key==='Enter')submitGame();};
+w
