@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>Siyam VocabPro</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','Poppins',system-ui,sans-serif;background:linear-gradient(145deg,#1a1e2b 0%,#2a3142 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;margin:0}
+.app-container{max-width:500px;width:100%;background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:40px;box-shadow:0 30px 50px rgba(0,0,0,0.5);padding:24px 20px 30px;border:1px solid rgba(255,255,255,0.15);display:flex;flex-direction:column;gap:20px}
+.header{display:flex;justify-content:space-between;align-items:center;color:white}
+.logo{font-weight:700;font-size:1.8rem;background:linear-gradient(135deg,#f9d56e,#f8b042);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.progress-area{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,0.3);padding:8px 16px;border-radius:30px;color:#ddd;font-weight:600;font-size:0.9rem}
+.progress-bar-bg{width:90px;height:6px;background:#3a3f51;border-radius:10px;overflow:hidden}
+.progress-fill{height:100%;width:0%;background:#f9d56e;border-radius:10px;transition:width 0.3s}
+.word-card{background:rgba(22,26,35,0.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:36px;padding:28px 22px;border:1px solid rgba(255,255,255,0.18);box-shadow:0 20px 30px -10px black;transition:all 0.25s}
+.word-main{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.word-text{font-size:3rem;font-weight:700;color:white;text-shadow:0 4px 10px rgba(0,0,0,0.4);line-height:1.1}
+.pos-badge{background:rgba(255,255,255,0.15);padding:6px 18px;border-radius:30px;font-weight:600;font-size:0.9rem;text-transform:uppercase;color:#f0e6c5;border:1px solid rgba(255,255,255,0.25)}
+.bengali-meaning{font-size:1.3rem;font-weight:600;color:#ffd966;margin:8px 0 16px;background:rgba(0,0,0,0.3);padding:6px 14px;border-radius:20px;display:inline-block}
+.examples{display:flex;flex-direction:column;gap:16px;margin:16px 0 5px}
+.example-item{display:flex;flex-direction:column;gap:4px;border-left:4px solid;padding:10px 14px;border-radius:0 12px 12px 0;background:rgba(255,255,255,0.05)}
+.example-level{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px}
+.eng-sentence{font-weight:500;color:#f0f0f0;font-size:1rem}
+.ben-sentence{color:#b9c6da;font-size:0.9rem;font-style:italic}
+.action-row{display:flex;align-items:center;justify-content:space-between;margin:18px 0 5px;flex-wrap:wrap;gap:10px}
+.favorite-btn{background:rgba(255,255,255,0.1);border:none;color:white;font-size:1.3rem;padding:10px 16px;border-radius:30px;display:flex;align-items:center;gap:6px;cursor:pointer;border:1px solid rgba(255,255,255,0.2)}
+.favorite-btn.active{background:#e03a4c;border-color:#ff8a8a}
+.pronounce-btn{background:#f9d56e;border:none;border-radius:40px;padding:10px 18px;font-weight:600;color:#1a1e2b;display:flex;align-items:center;gap:6px;cursor:pointer;box-shadow:0 10px 15px -5px rgba(249,213,110,0.3)}
+.nav-buttons{display:flex;justify-content:space-between;gap:12px;margin-top:8px}
+.nav-btn{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);color:white;padding:12px 22px;border-radius:30px;font-weight:600;cursor:pointer;flex:1;display:flex;align-items:center;justify-content:center;gap:4px}
+.quiz-btn{background:#4b5c7a;border-color:#6d7f9c}
+.notification-banner{background:rgba(249,213,110,0.15);border-radius:20px;padding:10px 16px;color:#ffe5a3;display:none;align-items:center;justify-content:space-between;font-size:0.85rem;border:1px solid rgba(249,213,110,0.4)}
+@media(max-width:400px){.word-text{font-size:2.4rem}}
+</style>
+</head>
+<body>
+<div class="app-container">
+<div class="header">
+<span class="logo">Siyam VocabPro</span>
+<div class="progress-area"><span id="progressText">0/5000</span><div class="progress-bar-bg"><div id="progressFill" class="progress-fill"></div></div></div>
+</div>
+<div id="wordCard" class="word-card"></div>
+<div id="notificationBanner" class="notification-banner"><span>🔁 আজকের শব্দ প্রস্তুত</span><button id="dismissNotify" style="color:#ffe5a3;background:none;border:none;font-size:1.2rem;cursor:pointer">✕</button></div>
+<div class="nav-buttons">
+<button id="prevBtn" class="nav-btn">← আগের</button>
+<button id="quizBtn" class="nav-btn quiz-btn">🧠 কুইজ</button>
+<button id="nextBtn" class="nav-btn">পরবর্তী →</button>
+</div>
+</div>
+<div id="quizModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);align-items:center;justify-content:center;z-index:1000">
+<div style="background:#202433;border-radius:32px;padding:24px;max-width:380px;width:90%;color:white;border:1px solid rgba(255,255,255,0.2)">
+<h3 style="margin-bottom:16px;color:#f9d56e">🧠 দ্রুত কুইজ</h3>
+<p id="quizQuestion" style="font-weight:600;margin-bottom:18px"></p>
+<div id="quizOptions" style="display:flex;flex-direction:column;gap:10px"></div>
+<p id="quizFeedback" style="margin-top:15px;font-weight:500"></p>
+<button id="closeQuiz" style="margin-top:18px;background:#4b5c7a;padding:10px;border-radius:24px;color:white;width:100%;border:none;cursor:pointer">বন্ধ করুন</button>
+</div>
+</div>
+<script>
+(function(){
+const wordBank=[];
+const rawWords=[
+{word:"Ephemeral",bengali:"ক্ষণস্থায়ী",pos:"adjective",examples:[{level:"easy",eng:"The sunset was ephemeral but beautiful.",ben:"সূর্যাস্তটি ক্ষণস্থায়ী কিন্তু সুন্দর ছিল।"},{level:"medium",eng:"Fame can be ephemeral in the digital age.",ben:"ডিজিটাল যুগে খ্যাতি ক্ষণস্থায়ী হতে পারে।"},{level:"advanced",eng:"He contemplated the ephemeral nature of human existence.",ben:"তিনি মানব অস্তিত্বের ক্ষণস্থায়ী প্রকৃতি নিয়ে চিন্তা করলেন।"}]},
+{word:"Ubiquitous",bengali:"সর্বব্যাপী",pos:"adjective",examples:[{level:"easy",eng:"Smartphones are ubiquitous nowadays.",ben:"স্মার্টফোন আজকাল সর্বব্যাপী।"},{level:"medium",eng:"The ubiquitous presence of social media shapes opinions.",ben:"সামাজিক মাধ্যমের সর্বব্যাপী উপস্থিতি মতামত গঠন করে।"},{level:"advanced",eng:"Her influence became ubiquitous across industries.",ben:"তার প্রভাব শিল্পক্ষেত্রে সর্বব্যাপী হয়ে উঠল।"}]},
+{word:"Eloquent",bengali:"বাকপটু",pos:"adjective",examples:[{level:"easy",eng:"She gave an eloquent speech.",ben:"তিনি একটি বাকপটু বক্তৃতা দিলেন।"},{level:"medium",eng:"His eloquent gestures conveyed deep emotion.",ben:"তার বাকপটু অঙ্গভঙ্গি গভীর আবেগ প্রকাশ করল।"},{level:"advanced",eng:"The lawyer's eloquent argument swayed the jury.",ben:"উকিলের বাকপটু যুক্তি জুরিকে প্রভাবিত করল।"}]},
+{word:"Resilient",bengali:"স্থিতিস্থাপক",pos:"adjective",examples:[{level:"easy",eng:"Children are often resilient.",ben:"শিশুরা প্রায়ই স্থিতিস্থাপক হয়।"},{level:"medium",eng:"The resilient economy recovered quickly.",ben:"স্থিতিস্থাপক অর্থনীতি দ্রুত পুনরুদ্ধার হলো।"},{level:"advanced",eng:"She remained resilient despite repeated failures.",ben:"বারবার ব্যর্থতা সত্ত্বেও তিনি স্থিতিস্থাপক ছিলেন।"}]},
+{word:"Meticulous",bengali:"খুঁটিনাটি",pos:"adjective",examples:[{level:"easy",eng:"He is meticulous about his work.",ben:"সে তার কাজে খুঁটিনাটি।"},{level:"medium",eng:"Meticulous planning ensured the event's success.",ben:"খুঁটিনাটি পরিকল্পনা অনুষ্ঠানের সাফল্য নিশ্চিত করেছিল।"},{level:"advanced",eng:"The meticulous restoration took five years.",ben:"খুঁটিনাটি পুনরুদ্ধারে পাঁচ বছর লেগেছিল।"}]},
+{word:"Candid",bengali:"অকপট",pos:"adjective",examples:[{level:"easy",eng:"She gave a candid interview.",ben:"তিনি একটি অকপট সাক্ষাৎকার দিলেন।"},{level:"medium",eng:"His candid feedback improved the project.",ben:"তার অকপট মতামত প্রকল্পটি উন্নত করল।"},{level:"advanced",eng:"A candid conversation resolved their differences.",ben:"একটি অকপট কথোপকথন তাদের মতভেদ দূর করল।"}]}
+];
+for(let i=0;i<5000;i++){let b=rawWords[i%rawWords.length];let s=Math.floor(i/rawWords.length)>0?' '+String.fromCharCode(65+(Math.floor(i/rawWords.length)%26)):'';wordBank.push({id:i,word:b.word+s,bengali:b.bengali,pos:b.pos,examples:b.examples.map(e=>({level:e.level,eng:e.eng,ben:e.ben}))})}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
+shuffle(wordBank);
+let idx=0,favs=new Set(),seen=new Set();
+const card=document.getElementById('wordCard'),pt=document.getElementById('progressText'),pf=document.getElementById('progressFill'),pb=document.getElementById('prevBtn'),nb=document.getElementById('nextBtn'),qb=document.getElementById('quizBtn'),nbanner=document.getElementById('notificationBanner'),qm=document.getElementById('quizModal'),cq=document.getElementById('closeQuiz'),qq=document.getElementById('quizQuestion'),qo=document.getElementById('quizOptions'),qf=document.getElementById('quizFeedback');
+const themes=['linear-gradient(135deg,#3a2c4a,#5b3e6b)','linear-gradient(135deg,#2c3e50,#3498db)','linear-gradient(135deg,#1e3c3a,#2b7a78)','linear-gradient(135deg,#4a2c3d,#c44569)','linear-gradient(135deg,#2d3a4a,#5f7a9c)','linear-gradient(135deg,#3c2a2a,#b5651d)','linear-gradient(135deg,#1f3b4a,#0f8b8d)','linear-gradient(135deg,#372b46,#8e6abf)'];
+function updProg(){seen.add(idx);let p=Math.min(100,Math.round((seen.size/wordBank.length)*100));pt.textContent=seen.size+'/5000';pf.style.width=p+'%'}
+function curW(){return wordBank[idx]}
+function render(){let w=curW();if(!w)return;card.style.background=themes[idx%themes.length];card.style.boxShadow='0 20px 30px -5px rgba(0,0,0,0.6)';let f=favs.has(w.id);card.innerHTML='<div class="word-main"><span class="word-text">'+w.word+'</span><span class="pos-badge">'+w.pos+'</span></div><div class="bengali-meaning">🇧🇩 '+w.bengali+'</div><div class="examples" id="exCont"></div><div class="action-row"><button id="favBtn" class="favorite-btn'+(f?' active':'')+'"><span>'+(f?'❤️':'🤍')+'</span> প্রিয়</button><button id="pronBtn" class="pronounce-btn"><span>🔊</span> উচ্চারণ</button></div>';
+let ec=document.getElementById('exCont');let lc={easy:'#6ab04c',medium:'#f9ca24',advanced:'#eb4d4b'};
+w.examples.forEach(ex=>{let d=document.createElement('div');d.className='example-item';d.style.borderLeftColor=lc[ex.level]||'#ccc';d.innerHTML='<span class="example-level" style="color:'+lc[ex.level]+'">'+ex.level+'</span><span class="eng-sentence">'+ex.eng+'</span><span class="ben-sentence">'+ex.ben+'</span>';ec.appendChild(d)});
+document.getElementById('favBtn').addEventListener('click',()=>{if(favs.has(w.id))favs.delete(w.id);else favs.add(w.id);render()});
+document.getElementById('pronBtn').addEventListener('click',()=>{if('speechSynthesis' in window){let u=new SpeechSynthesisUtterance(w.word);u.lang='en-US';u.rate=0.9;speechSynthesis.cancel();speechSynthesis.speak(u)}else alert('উচ্চারণ সমর্থিত নয়')});
+updProg()}
+function goP(){if(!wordBank.length)return;idx=(idx-1+wordBank.length)%wordBank.length;render()}
+function goN(){if(!wordBank.length)return;idx=(idx+1)%wordBank.length;render()}
+function notify(){if(!wordBank.length)return;let r=wordBank[Math.floor(Math.random()*wordBank.length)];nbanner.style.display='flex';nbanner.innerHTML='<span>🔁 আজকের শব্দ: <strong>'+r.word+'</strong> ('+r.bengali+')</span><button id="dni" style="color:#ffe5a3;background:none;border:none;font-size:1.2rem;cursor:pointer">✕</button>';document.getElementById('dni').addEventListener('click',()=>{nbanner.style.display='none'})}
+function quiz(){if(wordBank.length<4)return;let cw=curW();let oth=wordBank.filter(w=>w.id!==cw.id).sort(()=>Math.random()-0.5).slice(0,3);let ops=[cw,...oth].sort(()=>Math.random()-0.5);qq.textContent='"'+cw.bengali+'" এর ইংরেজি শব্দ কোনটি?';qo.innerHTML='';qf.textContent='';
+ops.forEach(o=>{let b=document.createElement('button');b.textContent=o.word;b.style.cssText='padding:12px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:white;font-weight:600;cursor:pointer';b.addEventListener('click',()=>{if(o.id===cw.id){qf.textContent='✅ সঠিক!';qf.style.color='#6ab04c'}else{qf.textContent='❌ ভুল! সঠিক: '+cw.word;qf.style.color='#eb4d4b'}document.querySelectorAll('#quizOptions button').forEach(bt=>bt.disabled=true)});qo.appendChild(b)});qm.style.display='flex'}
+pb.addEventListener('click',goP);nb.addEventListener('click',goN);qb.addEventListener('click',quiz);cq.addEventListener('click',()=>{qm.style.display='none'});document.getElementById('dismissNotify').addEventListener('click',()=>{nbanner.style.display='none'});
+window.addEventListener('click',e=>{if(e.target===qm)qm.style.display='none'});
+window.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'){e.preventDefault();goP()}else if(e.key==='ArrowRight'){e.preventDefault();goN()}});
+render();setTimeout(notify,2000);
+document.addEventListener('click',function(e){if(e.target&&e.target.id==='dni')nbanner.style.display='none'});
+})();
+</script>
+</body>
+</html>
